@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+###> doctrine/doctrine-bundle ###
+  db:
+    image: 'mysql:latest'
+    container_name: todolist_container_db
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: todolist_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+    volumes:
+      - db-data:/var/lib/mysql/data:rw
+    ports:
+      - "33061:3306"
+
+
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin
+    container_name: todolist_container_phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=db
+###< doctrine/doctrine-bundle ###
+
+volumes:
+###> doctrine/doctrine-bundle ###
+  db-data:
+###< doctrine/doctrine-bundle ###
