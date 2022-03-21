@@ -8,10 +8,10 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: todolist_db
-      MYSQL_USER: root
+      MYSQL_USER: user_db
       MYSQL_PASSWORD: secret
     volumes:
-      - db-data:/var/lib/mysql/data:rw
+      - ./docker/mysql-data:/var/lib/mysql
     ports:
       - "33061:3306"
 
@@ -28,7 +28,6 @@ services:
       - PMA_HOST=db
 ###< doctrine/doctrine-bundle ###
 
-volumes:
 ###> doctrine/doctrine-bundle ###
-  db-data:
+
 ###< doctrine/doctrine-bundle ###
