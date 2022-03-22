@@ -6,6 +6,9 @@
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
+/vendor/
+/docker/*
+###< symfony/framework-bundle ###
 ###< symfony/framework-bundle ###
 /app/config/parameters.yml
 /build/
@@ -21,5 +24,4 @@
 /var/sessions/*
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
-/vendor/
 /web/bundles/
