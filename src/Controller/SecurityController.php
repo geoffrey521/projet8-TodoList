@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Exception;
+use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,8 +16,9 @@ class SecurityController extends AbstractController
      */
     public function loginAction(AuthenticationUtils $authenticationUtils)
     {
-
+        // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', array(
@@ -26,17 +29,19 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/login_check", name="login_check")
+     * @throws Exception
      */
     public function loginCheck()
     {
+        throw new Exception('this function should not be reachable');
         // This code is never executed.
     }
 
     /**
      * @Route("/logout", name="logout")
      */
-    public function logoutCheck()
+    public function logoutCheck(): void
     {
-        // This code is never executed.
+        throw new LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }
