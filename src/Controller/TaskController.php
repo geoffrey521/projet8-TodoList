@@ -24,6 +24,8 @@ class TaskController extends AbstractController
     public function createAction(Request $request)
     {
         $task = new Task();
+        $task->setAuthor($this->getUser());
+
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -84,6 +86,12 @@ class TaskController extends AbstractController
     public function deleteTaskAction(Task $task)
     {
         $em = $this->getDoctrine()->getManager();
+
+        if ($task->getAuthor() === null) {
+            $this->denyAccessUnlessGranted('ROLE_ADMIN', 'Seul un administrateur peut supprimer cette tâche');
+            $em->remove($task);
+        }
+
         $em->remove($task);
         $em->flush();
 
