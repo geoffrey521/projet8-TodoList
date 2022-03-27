@@ -42,6 +42,12 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     private $email;
 
     /**
+     * @ORM\Column(type="json")
+     * @var array<string>
+     */
+    private array $roles = [];
+
+    /**
      * @ORM\OneToMany(targetEntity=Task::class, mappedBy="author")
      */
     private $tasks;
@@ -94,11 +100,19 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
         $this->email = $email;
     }
 
-    public function getRoles()
+    public function setRoles(array $roles): self
     {
-        return array('ROLE_USER');
+        $this->roles = $roles;
+
+        return $this;
     }
 
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+
+        return array_unique($roles);
+    }
     public function eraseCredentials()
     {
     }
