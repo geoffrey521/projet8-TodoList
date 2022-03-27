@@ -12,22 +12,11 @@ class TaskControllerTest extends WebTestCase
     {
         $this->client = static::createClient();
     }
-//
-//    public function testSomething(): void
-//    {
-//        $client = static::createClient();
-//        $crawler = $client->request('GET', '/');
-//
-//        $this->assertResponseIsSuccessful();
-//        $this->assertSelectorTextContains('h1', 'Hello World');
-//    }
 
     public function testCreateTask()
     {
         // start at
-        $crawler = $this->client->request('GET', '/');
-
-        $crawler = $this->client->clickLink('Créer une nouvelle tâche');
+        $crawler = $this->client->request('GET', '/tasks/create');
 
         $form = $crawler->selectButton('Ajouter')->form();
         $form['task[title]'];

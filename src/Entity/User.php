@@ -43,6 +43,7 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
 
     /**
      * @ORM\Column(type="json")
+     * @var array<string>
      */
     private array $roles = [];
 
@@ -109,9 +110,6 @@ class User implements UserInterface, \Symfony\Component\Security\Core\User\Passw
     public function getRoles(): array
     {
         $roles = $this->roles;
-
-        // all user have at least role user
-        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
