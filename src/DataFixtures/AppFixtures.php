@@ -22,6 +22,11 @@ class AppFixtures extends Fixture
             'password' => 'admin'
         ]);
 
+        UserFactory::createOne([
+            'username' => 'anonyme',
+            'email' => 'anonyme@todo-co.fr'
+        ]);
+
         TaskFactory::createMany(20, function () {
             return [
                 'author' => UserFactory::random()
