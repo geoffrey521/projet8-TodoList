@@ -23,6 +23,11 @@ class AppFixtures extends Fixture
         ]);
 
         UserFactory::createOne([
+            'username' => 'user',
+            'password' => 'user'
+        ]);
+
+        UserFactory::createOne([
             'username' => 'anonyme',
             'email' => 'anonyme@todo-co.fr'
         ]);
