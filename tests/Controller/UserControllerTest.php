@@ -27,8 +27,16 @@ class UserControllerTest extends WebTestCase
         $crawler = $client->followRedirect();
 
         $this->assertEquals('200', $client->getResponse()->getStatusCode());
+    }
 
+    public function testListUserNotAdmin()
+    {
+        $client = static::createClient();
+        $client->request('POST', '/login', ['_username' => 'user', '_password' => 'user']);
 
+        $client->request('GET', '/users');
+
+        $this->assertEquals(403, $client->getResponse()->getStatusCode());
     }
 
 }

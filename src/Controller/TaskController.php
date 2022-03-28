@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\TaskType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,13 +48,14 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
      */
+    #[IsGranted('TASK_EDIT', subject: "task")]
     public function editAction(Task $task, Request $request)
     {
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
             $this->addFlash('success', 'La tâche a bien été modifiée.');
@@ -83,14 +85,10 @@ class TaskController extends AbstractController
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
      */
+    #[IsGranted('TASK_DELETE', subject: "task")]
     public function deleteTaskAction(Task $task)
     {
         $em = $this->getDoctrine()->getManager();
-
-        if ($task->getAuthor() === null) {
-            $this->denyAccessUnlessGranted('ROLE_ADMIN', 'Seul un administrateur peut supprimer cette tâche');
-            $em->remove($task);
-        }
 
         $em->remove($task);
         $em->flush();
