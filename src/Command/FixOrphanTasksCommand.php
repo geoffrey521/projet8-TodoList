@@ -9,6 +9,7 @@ use App\Service\OrphanTasksAssociator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -54,12 +55,19 @@ class FixOrphanTasksCommand extends Command
             $tasks = $this->taskRepository->findBy(['author' => NULL]);
             $anonymousUser = $this->userRepository->findOneBy(['username' => 'anonyme']);
 
-            foreach ($tasks as $task) {
-                $task->setAuthor($anonymousUser);
-                $this->entityManager->persist($task);
-            }
+            $progressBar = new ProgressBar($output, count($tasks));
 
-            $this->entityManager->flush();
+            if(!empty($tasks)) {
+                $progressBar->start();
+                foreach ($tasks as $task) {
+                    $task->setAuthor($anonymousUser);
+                    $this->entityManager->persist($task);
+                    $progressBar->advance();
+                }
+                $this->entityManager->flush();
+                $progressBar->finish();
+                $io->writeln(' ');
+            }
 
             $message = empty($tasks) ? 'All tasked are already up to date.' : 'All orphan tasks has been updated';
 

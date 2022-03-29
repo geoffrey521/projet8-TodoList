@@ -34,4 +34,5 @@
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
+/public/test.html
 ###< phpunit/phpunit ###
