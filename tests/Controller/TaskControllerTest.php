@@ -8,7 +8,7 @@ use Faker;
 
 class TaskControllerTest extends SetupTest
 {
-    public function testViewTaskList()
+    public function testViewTaskListAsUser(): void
     {
         $this->loggedAsUser();
 
@@ -80,6 +80,22 @@ class TaskControllerTest extends SetupTest
     /**
      * @depends testEditTaskAsAuthor
      */
+    public function testToggleTask(Task $task): void
+    {
+        $this->loggedAsUser();
+
+        $crawler = $this->client->request('GET', "/tasks/{$task->getId()}/toggle");
+
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+
+        $crawler = $this->client->followRedirect();
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(1, $crawler->filter('div.alert-success:contains("a bien été marquée comme faite.")')->count());
+    }
+
+    /**
+     * @depends testEditTaskAsAuthor
+     */
     public function testDeleteTaskAsUser(Task $task)
     {
         $this->loggedAsUser();
@@ -111,4 +127,6 @@ class TaskControllerTest extends SetupTest
 
         $this->assertSame(302, $this->client->getResponse()->getStatusCode());
     }
+
+
 }
