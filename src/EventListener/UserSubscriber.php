@@ -32,7 +32,13 @@ class UserSubscriber implements EventSubscriberInterface
         $this->hashSetPassword($eventArgs);
     }
 
-    public function hashSetPassword(LifecycleEventArgs $eventArgs)
+    /**
+     * Check event arg and hash password
+     *
+     * @param LifecycleEventArgs $eventArgs
+     * @return void
+     */
+    public function hashSetPassword(LifecycleEventArgs $eventArgs): void
     {
         $entity = $eventArgs->getEntity();
 
