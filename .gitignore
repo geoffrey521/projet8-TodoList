@@ -36,3 +36,7 @@
 .phpunit.result.cache
 /public/test.html
 ###< phpunit/phpunit ###
+
+### test coverage ###
+/coverage/test-coverage
+### test coverage ###
