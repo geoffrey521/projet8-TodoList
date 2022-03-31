@@ -2,91 +2,89 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\User;
+use App\Tests\SetupTest;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Faker;
 
-class UserControllerTest extends WebTestCase
+class UserControllerTest extends SetupTest
 {
+
     public function testViewListUserNotAdmin()
     {
-        $client = static::createClient();
-        $client->request('POST', '/login', ['_username' => 'user', '_password' => 'user']);
+        $this->loggedAsUser();
 
-        $client->request('GET', '/users');
+        $this->client->request('GET', '/users');
 
-        $this->assertEquals(403, $client->getResponse()->getStatusCode());
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testViewUserListAsAdmin()
     {
-        $client = static::createClient();
-        $client->request('POST', '/login', ['_username' => 'admin', '_password' => 'admin']);
+        $this->loggedAsAdmin();
 
-        $crawler = $client->request('GET', '/users');
+        $crawler = $this->client->request('GET', '/users');
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertSame(1, $crawler->filter('h1:contains("Liste des utilisateurs")')->count());
     }
 
-    public function testCreateUserAsAdmin(): void
+    public function testCreateUserAsAdmin(): User
     {
-        $client = static::createClient();
-        $client->request('POST', '/login', ['_username' => 'admin', '_password' => 'admin']);
+        $this->loggedAsAdmin();
 
-        $crawler = $client->request('GET', '/users/create');
+        $crawler = $this->client->request('GET', '/users/create');
+
+        $faker = Faker\Factory::create();
+        $fakePassword = $faker->password();
+        $fakeUsername = $faker->userName();
+
+        $form = $crawler->selectButton('Ajouter')->form();
+        $form['user[username]'] = $fakeUsername;
+        $form['user[password][first]'] = $fakePassword;
+        $form['user[password][second]'] = $fakePassword;
+        $form['user[email]'] = $faker->email();
+        $form['user[roles]'] = 'ROLE_USER';
+        $crawler = $this->client->submit($form);
+
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
+
+        $crawler = $this->client->followRedirect();
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(1, $crawler->filter('div.alert-success:contains("Superbe ! L\'utilisateur a bien été ajouté.")')->count());
+
+        return $this->userRepository->findOneBy(['username' => $fakeUsername]);
+    }
+
+    /**
+     * @depends testCreateUserAsAdmin
+     */
+    public function testEditUserAsAdmin(User $user): User
+    {
+        $this->loggedAsAdmin();
+
+        $crawler = $this->client->request('GET', "/users/{$user->getId()}/edit");
 
         $faker = Faker\Factory::create();
         $fakePassword = $faker->password();
 
-        $form = $crawler->selectButton('Ajouter')->form();
+        $form = $crawler->selectButton('Modifier')->form();
         $form['user[username]'] = $faker->userName();
         $form['user[password][first]'] = $fakePassword;
         $form['user[password][second]'] = $fakePassword;
         $form['user[email]'] = $faker->email();
         $form['user[roles]'] = 'ROLE_USER';
-        $crawler = $client->submit($form);
+        $crawler = $this->client->submit($form);
 
-        $this->assertEquals('302', $client->getResponse()->getStatusCode());
+        $this->assertEquals(302, $this->client->getResponse()->getStatusCode());
 
-        $crawler = $client->followRedirect();
+        $crawler = $this->client->followRedirect();
 
-        $this->assertEquals('200', $client->getResponse()->getStatusCode());
-        $this->assertSame(1, $crawler->filter('div.alert-success:contains("Superbe ! L\'utilisateur a bien été ajouté.")')->count());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(1, $crawler->filter('div.alert-success:contains("Superbe ! L\'utilisateur a bien été modifié")')->count());
+
+        return $user;
     }
-
-    public function testEditUserAsAdmin(): void
-    {
-        $client = static::createClient();
-        $client->request('POST', '/login', ['_username' => 'admin', '_password' => 'admin']);
-
-        $crawler = $client->request('GET', '/users/create');
-
-        $faker = Faker\Factory::create();
-        $fakePassword = $faker->password();
-
-        $form = $crawler->selectButton('Ajouter')->form();
-        $form['user[username]'] = $faker->userName();
-        $form['user[password][first]'] = $fakePassword;
-        $form['user[password][second]'] = $fakePassword;
-        $form['user[email]'] = $faker->email();
-        $form['user[roles]'] = 'ROLE_USER';
-        $crawler = $client->submit($form);
-
-        $this->assertEquals('302', $client->getResponse()->getStatusCode());
-
-        $crawler = $client->followRedirect();
-
-        $this->assertEquals('200', $client->getResponse()->getStatusCode());
-        $this->assertSame(1, $crawler->filter('div.alert-success:contains("Superbe ! L\'utilisateur a bien été ajouté.")')->count());
-    }
-
-    public function testDeleteUserAsAdmin()
-    {
-        $client = static::createClient();
-        $client->request('POST', '/login', ['_username' => 'admin', '_password' => 'admin']);
-
-        $crawler = $client->request('GET', '/users/delete');
-    }
-
 
 }

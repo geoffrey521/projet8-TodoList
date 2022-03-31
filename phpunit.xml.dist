@@ -9,6 +9,8 @@
       <directory>src/*Bundle/Resources</directory>
       <directory>src/*/*Bundle/Resources</directory>
       <directory>src/*/Bundle/*Bundle/Resources</directory>
+      <directory>src/DataFixtures</directory>
+      <directory>src/Factory</directory>
     </exclude>
   </coverage>
   <php>
