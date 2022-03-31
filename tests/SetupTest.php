@@ -7,6 +7,9 @@ use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * This class contains all need setup datas for tests
+ */
 class SetupTest extends WebTestCase
 {
     protected KernelBrowser $client;
