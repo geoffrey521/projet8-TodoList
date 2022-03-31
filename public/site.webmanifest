@@ -1,0 +1,7 @@
+{
+  "name": "TodoList",
+  "short_name": "TD",
+  "display": "browser",
+  "scope": "/",
+  "start_url": "/"
+}
