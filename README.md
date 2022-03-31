@@ -82,3 +82,5 @@ symfony console app:fix-orphan-tasks
     * "localhost:8080"
         * user: root
         * password: secret
+
+### Checkout our documentation in 'docs' folder before any contribution
