@@ -107,6 +107,18 @@
     "myclabs/deep-copy": {
         "version": "1.11.0"
     },
+    "nelmio/alice": {
+        "version": "3.10",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "42b52d2065dc3fde27912d502c18ca1926e35ae2"
+        },
+        "files": [
+            "config/packages/nelmio_alice.yaml"
+        ]
+    },
     "nikic/php-parser": {
         "version": "v4.13.2"
     },
