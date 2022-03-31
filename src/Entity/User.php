@@ -64,6 +64,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
+    /**
+     * The public representation of the user (e.g. a username, an email address, etc.)
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
     public function getUsername()
     {
         return $this->username;
@@ -77,16 +87,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getSalt()
     {
         return null;
-    }
-
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUserIdentifier(): string
-    {
-        return (string) $this->username;
     }
 
     /**
