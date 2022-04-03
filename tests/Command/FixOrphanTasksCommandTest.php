@@ -42,6 +42,6 @@ class FixOrphanTasksCommandTest extends KernelTestCase
 
         $output = $commandTester->getDisplay();
 
-        $this->assertStringContainsString('All tasked are already up to date', $output);
+        $this->assertStringContainsString('All orphan tasks has been updated', $output);
     }
 }
